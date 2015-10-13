@@ -7,8 +7,16 @@ def web_crawler(url):
     try:
         source = requests.get(url)
     except NameError:
-        print 'cannot resolve', url, "\n"
+        print 'cannot resolve', url
+    return source
 
+
+def image_header(url):
+    global source
+    try:
+        source = requests.head(url)
+    except NameError:
+        print 'cannot resolve image', url
     return source
 
 
@@ -26,7 +34,7 @@ def image_detect(url):
 
 
 def image_size(image_url):
-    size = web_crawler(image_detect(image_url)).headers['Content-Length']
+    size = image_header(image_detect(image_url)).headers['Content-Length']
     return int(size)
 
 
@@ -39,11 +47,11 @@ def tag_op(tag, url):
     for daftar in find:
         i += 1
         image += image_size(daftar.get('src'))
-        print i, daftar.get('src'), image_size(daftar.get('src'))
+        print i, image_detect(daftar.get('src')), image_size(daftar.get('src'))
 
-    # total_size = (image)
+    total_size = image / 1024
     print "\nJumlah %s =" % tag, count_tag
-    print "Total Ukuran All %s =" % tag, image
+    print "Total Ukuran All %s =" % tag, total_size, "K"
 
 # tag_op("img", "http://localhost/slcs")
 tag_op("img", "http://www.detik.com")
